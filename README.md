@@ -1,35 +1,28 @@
 # 🏨 U2 - Práctica 1  
-# Sistema de Reservas de Hotel con Pilas
+# ReservaHotel_Pilas
 
 ---
 
-## 📌 Descripción del Proyecto
+## 📌 Descripción General
 
-Sistema de gestión de reservas de hotel desarrollado en Python, utilizando estructuras de datos tipo pila implementadas desde cero.
+Sistema de gestión de reservas de hotel desarrollado en Python utilizando estructuras de datos tipo **Pila (LIFO)** implementadas desde cero.
 
-El sistema permite:
-
-- Registrar habitaciones
-- Crear reservas
-- Cancelar reservas
-- Deshacer cancelaciones
-- Visualizar reservas activas
-
-Se implementa el patrón **Command implícito** para permitir la funcionalidad de deshacer operaciones mediante el uso de una segunda pila.
+El sistema permite gestionar reservas, cancelaciones y la funcionalidad de deshacer operaciones mediante el uso implícito del **Patrón Command**.
 
 ---
 
 ## 🎯 Objetivo
 
-Aplicar estructuras de datos tipo **Pila (LIFO)** en un caso práctico real, integrando principios de Programación Orientada a Objetos, manejo de excepciones y buenas prácticas de desarrollo.
+Implementar un sistema de reservas de hotel utilizando pilas para gestionar operaciones de reserva y cancelación, con funcionalidad de deshacer usando el patrón Command y estructuras de datos tipo pila implementadas desde cero.
 
 ---
 
-## 🧱 Arquitectura del Proyecto
+# 🧱 Arquitectura del Proyecto
 
-El proyecto está dividido en 3 fases:
+El proyecto está dividido en 3 fases principales:
 
-### 1️⃣ Modelos
+## 1️⃣ MODELOS
+
 Contiene las clases base del sistema:
 
 - `Habitacion`
@@ -37,28 +30,134 @@ Contiene las clases base del sistema:
 - `PilaPersonalizada`
 
 Responsabilidad:
-Representar las entidades del sistema sin lógica de negocio compleja.
+Representar las entidades del sistema sin lógica compleja de negocio.
+
+Incluye:
+
+### 🔹 Habitacion
+Atributos:
+- numero: int
+- tipo: str
+- precio: float
+- disponible: bool
+
+Métodos:
+- __init__()
+- __str__()
+- __repr__()
 
 ---
 
-### 2️⃣ Lógica
-Contiene la clase principal:
+### 🔹 Reserva
+Atributos:
+- id_reserva: int
+- habitacion: Habitacion
+- fecha: str
+- cliente: str
 
-- `SistemaReservasHotel`
+Métodos:
+- __init__()
+- __str__()
+- __repr__()
+
+---
+
+### 🔹 PilaPersonalizada
+
+Estructura de datos implementada desde cero sin uso de `collections`.
+
+Atributos:
+- elementos: List
+- capacidad_maxima: int
+
+Métodos:
+- push(elemento)
+- pop()
+- peek()
+- is_empty()
+- is_full()
+- size()
+- __str__()
+
+Controla:
+- Overflow (desbordamiento)
+- Underflow (subdesbordamiento)
+
+---
+
+## 2️⃣ LOGICA
+
+Clase principal:
+
+### 🔹 SistemaReservasHotel
+
+Responsable de:
+- Crear reservas
+- Cancelarlas
+- Deshacer cancelaciones
+- Administrar habitaciones
+- Gestionar pilas
+
+Atributos:
+- pila_reservas_actuales
+- pila_deshacer
+- habitaciones
+- contador_reservas
+
+Métodos principales:
+
+### reservar_habitacion()
+1. Busca la habitación.
+2. Verifica disponibilidad.
+3. Crea objeto Reserva.
+4. Push en pila_reservas_actuales.
+5. Marca habitación como no disponible.
+6. Incrementa contador.
+
+---
+
+### cancelar_reserva()
+1. Pop de pila_reservas_actuales.
+2. Marca habitación como disponible.
+3. Push en pila_deshacer.
+
+---
+
+### deshacer_cancelacion()
+1. Pop de pila_deshacer.
+2. Marca habitación como no disponible.
+3. Push en pila_reservas_actuales.
+
+---
+
+### mostrar_reservas()
+Muestra las reservas activas.
+
+---
+
+### buscar_habitacion()
+Retorna objeto Habitacion si existe.
+
+---
+
+## 3️⃣ UI (Parte Visual)
+
+Interfaz por consola que permite:
+
+- Agregar habitaciones
+- Reservar
+- Cancelar
+- Deshacer
+- Mostrar estado actual
 
 Responsabilidad:
-Gestionar reservas, cancelaciones y deshacer operaciones utilizando pilas.
+Interactuar con el usuario y conectar con la lógica del sistema.
 
 ---
 
-### 3️⃣ UI (Interfaz)
-Interfaz por consola que permite interactuar con el sistema mediante un menú.
+# 📊 Diagrama UML
 
----
-
-## 📊 Diagrama UML (Resumen)
-
-Clases principales:
+Clases:
 
 - SistemaReservasHotel
 - Habitacion
@@ -67,99 +166,116 @@ Clases principales:
 
 Relaciones:
 
-- Composición: SistemaReservasHotel → PilaPersonalizada (2 instancias)
-- Agregación: SistemaReservasHotel → Habitacion
-- Asociación: Reserva → Habitacion
+- Composición: SistemaReservasHotel ◆—► PilaPersonalizada (2 instancias)
+- Agregación: SistemaReservasHotel ◇—► Habitacion (1..*)
+- Asociación: Reserva ——► Habitacion (1)
 
 ---
 
-## 🗂️ Estructura de Clases
+# 🔄 Patrón Command Implícito
 
-### 🔹 Habitacion
-Atributos:
-- numero
-- tipo
-- precio
-- disponible
+Cada operación de cancelación se almacena en una pila secundaria.
 
----
+Esto permite:
+- Revertir la última cancelación.
+- Simular comportamiento tipo Ctrl + Z.
 
-### 🔹 Reserva
-Atributos:
-- id_reserva
-- habitacion
-- fecha
-- cliente
+La pila_deshacer actúa como historial de comandos.
 
 ---
 
-### 🔹 PilaPersonalizada
-Implementada sin usar `collections`.
+# 🧠 Características Técnicas Implementadas
 
-Métodos:
-- push()
-- pop()
-- peek()
-- is_empty()
-- is_full()
-- size()
-
-Controla:
-- Overflow
-- Underflow
+- Pilas implementadas desde cero (sin collections).
+- Principios de Programación Orientada a Objetos.
+- Encapsulamiento y abstracción.
+- Clean Code.
+- Manejo robusto de excepciones.
+- Documentación con docstrings.
+- Separación en capas (Modelos, Lógica, UI).
+- Patrón Command implícito.
 
 ---
 
-### 🔹 SistemaReservasHotel
-Atributos:
-- pila_reservas_actuales
-- pila_deshacer
-- habitaciones
-- contador_reservas
+# 🔁 Flujo de Trabajo
 
-Métodos principales:
-- reservar_habitacion()
-- cancelar_reserva()
-- deshacer_cancelacion()
-- mostrar_reservas()
-- buscar_habitacion()
+El proyecto está dividido en 3 fases:
+
+- Modelos
+- Lógica
+- UI
 
 ---
 
-## 🔄 Funcionamiento del Deshacer
+# 📝 Convención de Commits
 
-Cuando se cancela una reserva:
+Palabras que se deben usar dependiendo el tipo de cambio:
 
-1. Se hace `pop()` de la pila de reservas activas.
-2. Se marca la habitación como disponible.
-3. Se guarda la reserva en la pila de deshacer.
+- feat: Agregar cambios nuevos  
+  Ejemplo:  
+  "feat: Agregar clase Habitacion"
 
-Al ejecutar deshacer:
+- fix: Corregir errores  
+  Ejemplo:  
+  "fix: Corregir calculo de precio total"
 
-1. Se hace `pop()` de la pila de deshacer.
-2. Se vuelve a marcar la habitación como no disponible.
-3. Se regresa a la pila de reservas activas.
+- refactor: Mejoras internas sin cambiar funcionalidad  
+  Ejemplo:  
+  "refactor: Reorganizar logica de reservas"
 
-Este comportamiento simula el patrón **Ctrl + Z**.
+- docs: Cambios en documentación  
+  Ejemplo:  
+  "docs: Actualizar README"
 
----
+- style: Cambios de formato (espacios, indentación o nombres)  
+  Ejemplo:  
+  "style: Corregir indentacion en SistemaReservasHotel"
 
-## 🧠 Conceptos Aplicados
-
-- Estructura de datos tipo Pila (LIFO)
-- Programación Orientada a Objetos
-- Encapsulamiento
-- Abstracción
-- Manejo de excepciones
-- Clean Code
-- Patrón Command (implícito)
-- Separación en capas (Modelos, Lógica, UI)
+En la descripción del commit se debe agregar TODO lo que se agregó o modificó, incluyendo clases y métodos de manera general.
 
 ---
 
-## ▶️ Ejecución
+# 🔀 Pull Requests
 
-1. Ejecutar el archivo principal:
+Regla importante:
 
-```bash
+En lugar de ":" se usa "/"
+
+Ejemplo:
+
+feat/agregue clase habitacion
+
+En la descripción del Pull Request se debe:
+
+- Especificar el nombre de la clase agregada.
+- Mencionar los métodos agregados.
+- Explicar de manera general qué se agregó al main.
+- Describir los métodos de forma un poco más detallada.
+
+Ejemplo de descripción:
+
+Se agrega clase SistemaReservasHotel con metodos reservar_habitacion, cancelar_reserva y deshacer_cancelacion.  
+Se integra manejo de pilas personalizadas y control de disponibilidad de habitaciones.  
+Se conecta la clase al archivo main para permitir ejecución mediante menú interactivo.
+
+---
+
+# ▶️ Ejecución
+
+Ejecutar archivo principal:
+
 python main.py
+
+Usar el menú interactivo para gestionar reservas.
+
+---
+
+# 📌 Conclusión
+
+Este proyecto demuestra la aplicación práctica de estructuras tipo Pila en un sistema real, integrando conceptos teóricos con implementación funcional.
+
+La estructura modular permite escalabilidad, mantenimiento y comprensión clara del flujo del sistema.
+
+Se cumple el objetivo de implementar pilas personalizadas y aplicar el patrón Command para deshacer operaciones.
+
+---
