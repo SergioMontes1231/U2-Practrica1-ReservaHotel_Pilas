@@ -1,5 +1,9 @@
-from reserva import Reserva
-from habitacion import Habitacion
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+from modulos.habitacion import Habitacion 
+from modulos.reserva import Reserva 
 
 
 class PilaPersonalizada:
