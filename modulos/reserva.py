@@ -1,4 +1,4 @@
-from habitacion import Habitacion
+from modulos.habitacion import Habitacion 
 
 
 class Reserva:
