@@ -1,7 +1,10 @@
-from habitacion import Habitacion
-from reserva import Reserva
-from pilas_personalizadas import PilaPersonalizada
+import sys
+import os
 
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+from modulos.habitacion import Habitacion 
+from modulos.reserva import Reserva 
+from logica.pilas_personalizadas import  PilaPersonalizada
 
 class SistemaReservasHotel:
     """
